@@ -4,56 +4,78 @@
   <!-- HTML HEAD -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Portfolio</title>
+  <title>Francis Kyle San Pascual | Portfolio</title>
   <link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
 
   <style>
-    /* ===================== CSS VARIABLES ===================== */
+    /* ===================== CSS VARIABLES — DEFAULT: MONOCHROME ===================== */
     :root {
-      --cream: #f2f0ed;
-      --grid-line: #d8d4cc;
-      --accent: #555050;
+      --bg:          #f2f0ed;
+      --grid-line:   #d8d4cc;
+      --accent:      #555050;
       --accent-dark: #333030;
-      --accent-light: #888080;
-      --tan: #c9c5bf;
-      --text-dark: #1e1e1e;
-      --text-mid: #555;
-      --win-bar: #3a3838;
-      --win-bg: #f5f4f2;
-      --win-border: #3a3838;
-      --folder-yellow: #d0ccc6;
+      --accent-light:#888080;
+      --tan:         #c9c5bf;
+      --text-dark:   #1e1e1e;
+      --text-mid:    #555;
+      --win-bar:     #3a3838;
+      --win-bg:      #f5f4f2;
+      --win-border:  #3a3838;
+      --folder-col:  #d0ccc6;
       --accent-pink: #888;
+      --taskbar-bg:  #1a1a1a;
+      --taskbar-btn: #2a2a2a;
+      --taskbar-hover:#3a3a3a;
       --font-mono: 'Share Tech Mono', monospace;
       --font-display: 'VT323', monospace;
       --font-body: 'Courier Prime', monospace;
     }
 
-    /* ===================== RED MOON THEME ===================== */
-    body.red-mode {
-      --cream: #0e0a0a;
-      --grid-line: #2a1a1a;
-      --accent: #cc2222;
-      --accent-dark: #991111;
-      --accent-light: #e05555;
-      --tan: #3a1010;
-      --text-dark: #f0e0e0;
-      --text-mid: #c09090;
-      --win-bar: #1a0808;
-      --win-bg: #120a0a;
-      --win-border: #cc2222;
-      --folder-yellow: #3a1a1a;
-      --accent-pink: #cc2222;
-      background-color: var(--cream);
-      background-image:
-        linear-gradient(var(--grid-line) 1px, transparent 1px),
-        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    /* ===================== NIGHT / STARRY THEME ===================== */
+    body.theme-night {
+      --bg:          #06091a;
+      --grid-line:   #0e1530;
+      --accent:      #7b9fff;
+      --accent-dark: #4a6ecc;
+      --accent-light:#a8c0ff;
+      --tan:         #1a2040;
+      --text-dark:   #e8eeff;
+      --text-mid:    #99aacc;
+      --win-bar:     #0d1535;
+      --win-bg:      #080d20;
+      --win-border:  #2a3a70;
+      --folder-col:  #1a2550;
+      --accent-pink: #7b9fff;
+      --taskbar-bg:  #03050f;
+      --taskbar-btn: #0d1530;
+      --taskbar-hover:#1a2545;
+    }
+
+    /* ===================== DAY / SUN THEME ===================== */
+    body.theme-day {
+      --bg:          #fffef5;
+      --grid-line:   #f0e8b0;
+      --accent:      #d4900a;
+      --accent-dark: #a06808;
+      --accent-light:#f0b030;
+      --tan:         #f5e080;
+      --text-dark:   #2a1f00;
+      --text-mid:    #7a5a10;
+      --win-bar:     #e8a010;
+      --win-bg:      #fffff0;
+      --win-border:  #d4900a;
+      --folder-col:  #f5d060;
+      --accent-pink: #f0b030;
+      --taskbar-bg:  #f5c518;
+      --taskbar-btn: #e8b010;
+      --taskbar-hover:#ffd030;
     }
 
     /* ===================== RESET & BASE ===================== */
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      background-color: var(--cream);
+      background-color: var(--bg);
       background-image:
         linear-gradient(var(--grid-line) 1px, transparent 1px),
         linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
@@ -62,8 +84,44 @@
       color: var(--text-dark);
       min-height: 100vh;
       overflow-x: hidden;
-      transition: background-color 0.4s ease, color 0.4s ease;
+      transition: background-color 0.5s ease, color 0.5s ease;
+      position: relative;
     }
+
+    /* Stars overlay for night mode */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+      background-image:
+        radial-gradient(1px 1px at 10% 15%, #fff 100%, transparent),
+        radial-gradient(1px 1px at 25% 40%, #aac 100%, transparent),
+        radial-gradient(1.5px 1.5px at 40% 10%, #fff 100%, transparent),
+        radial-gradient(1px 1px at 55% 70%, #fff 100%, transparent),
+        radial-gradient(1px 1px at 70% 25%, #aac 100%, transparent),
+        radial-gradient(1.5px 1.5px at 80% 55%, #fff 100%, transparent),
+        radial-gradient(1px 1px at 90% 80%, #aac 100%, transparent),
+        radial-gradient(1px 1px at 15% 85%, #fff 100%, transparent),
+        radial-gradient(1px 1px at 35% 60%, #aac 100%, transparent),
+        radial-gradient(1.5px 1.5px at 60% 45%, #fff 100%, transparent),
+        radial-gradient(1px 1px at 75% 90%, #fff 100%, transparent),
+        radial-gradient(1px 1px at 5%  50%, #aac 100%, transparent),
+        radial-gradient(1px 1px at 48% 30%, #fff 100%, transparent),
+        radial-gradient(1px 1px at 88% 12%, #aac 100%, transparent),
+        radial-gradient(1.5px 1.5px at 20% 5%,  #fff 100%, transparent),
+        radial-gradient(1px 1px at 65% 80%, #fff 100%, transparent),
+        radial-gradient(1px 1px at 92% 45%, #aac 100%, transparent),
+        radial-gradient(1px 1px at 33% 95%, #fff 100%, transparent),
+        radial-gradient(1px 1px at 50% 55%, #aac 100%, transparent),
+        radial-gradient(1.5px 1.5px at 78% 35%, #fff 100%, transparent);
+      z-index: 0;
+    }
+    body.theme-night::before { opacity: 1; }
+
+    main, nav, .taskbar { position: relative; z-index: 1; }
 
     /* ===================== SIDEBAR ICONS ===================== */
     .sidebar-left,
@@ -107,19 +165,19 @@
     }
     .icon-h {
       background: var(--accent-dark);
-      color: var(--cream);
+      color: var(--bg);
       font-family: var(--font-display);
       font-size: 26px;
     }
     .icon-folder {
-      background: var(--folder-yellow);
+      background: var(--folder-col);
       border: 2px solid #999;
       font-size: 22px;
     }
 
     /* ===================== TASKBAR ===================== */
     .taskbar {
-      background: #1a1a1a;
+      background: var(--taskbar-bg);
       padding: 10px 24px;
       display: flex;
       justify-content: flex-end;
@@ -127,8 +185,53 @@
       position: sticky;
       top: 0;
       z-index: 200;
-      border-bottom: 1px solid #333;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      transition: background 0.5s ease;
+      gap: 10px;
     }
+
+    /* Theme switch pill */
+    .theme-switch {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .switch-icon { display: flex; align-items: center; }
+    .switch-icon svg { width: 18px; height: 18px; }
+
+    .switch-track {
+      width: 52px;
+      height: 28px;
+      border-radius: 14px;
+      background: #333;
+      border: 2px solid #555;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.4s ease, border-color 0.4s ease;
+      flex-shrink: 0;
+    }
+    .switch-track:hover { border-color: #888; }
+
+    .switch-knob {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #ccc;
+      transition: transform 0.35s cubic-bezier(.4,0,.2,1), background 0.35s ease;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px;
+    }
+
+    /* Night mode: knob slides right */
+    body.theme-night .switch-track { background: #0d1535; border-color: #7b9fff; }
+    body.theme-night .switch-knob  { transform: translateX(24px); background: #7b9fff; }
+
+    /* Day mode: knob slides middle */
+    body.theme-day .switch-track { background: #f5c518; border-color: #d4900a; }
+    body.theme-day .switch-knob  { transform: translateX(12px); background: #fff176; }
 
     .taskbar-btn {
       width: 40px;
@@ -141,9 +244,9 @@
       justify-content: center;
       transition: transform 0.15s, background 0.15s;
       text-decoration: none;
-      background: #2a2a2a;
+      background: var(--taskbar-btn);
     }
-    .taskbar-btn:hover { transform: scale(1.12); background: #3a3a3a; }
+    .taskbar-btn:hover { transform: scale(1.12); background: var(--taskbar-hover); }
     .taskbar-btn svg { width: 22px; height: 22px; }
 
     /* ===================== MAIN LAYOUT ===================== */
@@ -184,7 +287,7 @@
 
     .win-bar {
       background: var(--win-bar);
-      color: var(--cream);
+      color: var(--text-dark);
       font-family: var(--font-mono);
       font-size: 13px;
       padding: 8px 12px;
@@ -213,7 +316,7 @@
       width: 110px; height: 110px;
       border-radius: 50%;
       border: 3px solid var(--accent);
-      background: var(--cream);
+      background: var(--bg);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -280,7 +383,7 @@
     }
     .strength-tag {
       background: var(--accent);
-      color: var(--cream);
+      color: var(--bg);
       font-family: var(--font-mono);
       font-size: 11px;
       padding: 4px 12px;
@@ -310,7 +413,7 @@
       overflow: hidden;
       cursor: pointer;
       transition: transform 0.15s, box-shadow 0.15s;
-      background: var(--cream);
+      background: var(--bg);
     }
     .media-card:hover {
       transform: translateY(-3px);
@@ -403,13 +506,13 @@
       color: var(--text-dark);
       font-family: var(--font-mono);
       font-size: 13px;
-      background: var(--cream);
+      background: var(--bg);
       transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
       cursor: pointer;
     }
     .contact-btn:hover {
       background: var(--accent);
-      color: var(--cream);
+      color: var(--bg);
       transform: translateY(-2px);
       box-shadow: 3px 3px 0 var(--accent-dark);
     }
@@ -440,7 +543,7 @@
   <!-- ===================== SIDEBAR LEFT ===================== -->
   <nav class="sidebar-left">
     <a class="sidebar-icon" href="#home">
-      <div class="icon-box icon-h">K</div>
+      <div class="icon-box icon-h">h</div>
       <span>profile</span>
     </a>
     <a class="sidebar-icon" href="#media">
@@ -463,12 +566,32 @@
 
   <!-- ===================== TASKBAR ===================== -->
   <div class="taskbar">
-    <!-- Moon toggle decoration -->
-    <button class="taskbar-btn" id="moon-btn" title="Toggle red mode">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#cccccc" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-      </svg>
-    </button>
+    <div class="theme-switch">
+      <!-- Moon icon -->
+      <div class="switch-icon" id="icon-moon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#7b9fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </div>
+      <!-- Switch track -->
+      <div class="switch-track" id="theme-toggle">
+        <div class="switch-knob"></div>
+      </div>
+      <!-- Sun icon -->
+      <div class="switch-icon" id="icon-sun">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#f5c518" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1"  x2="12" y2="3"/>
+          <line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22"   x2="5.64"  y2="5.64"/>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1"  y1="12" x2="3"  y2="12"/>
+          <line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22"  y1="19.78" x2="5.64"  y2="18.36"/>
+          <line x1="18.36" y1="5.64"  x2="19.78" y2="4.22"/>
+        </svg>
+      </div>
+    </div>
   </div>
 
   <!-- ===================== MAIN CONTENT ===================== -->
@@ -753,12 +876,14 @@
       });
     });
 
-    // --- MOON THEME TOGGLE ---
-    const moonBtn = document.getElementById("moon-btn");
-    moonBtn.addEventListener("click", () => {
-      document.body.classList.toggle("red-mode");
-      const isRed = document.body.classList.contains("red-mode");
-      moonBtn.querySelector("svg path").setAttribute("fill", isRed ? "#cc2222" : "none");
+    // --- THEME TOGGLE (mono → night → day → mono) ---
+    const themes = ['', 'theme-night', 'theme-day'];
+    let themeIndex = 0;
+
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+      document.body.classList.remove(...themes.filter(Boolean));
+      themeIndex = (themeIndex + 1) % themes.length;
+      if (themes[themeIndex]) document.body.classList.add(themes[themeIndex]);
     });
   </script>
 
