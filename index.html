@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- HTML HEAD -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+
+  <style>
+    /* ===================== CSS VARIABLES ===================== */
+    :root {
+      --cream: #f2f0ed;
+      --grid-line: #d8d4cc;
+      --accent: #555050;
+      --accent-dark: #333030;
+      --accent-light: #888080;
+      --tan: #c9c5bf;
+      --text-dark: #1e1e1e;
+      --text-mid: #555;
+      --win-bar: #3a3838;
+      --win-bg: #f5f4f2;
+      --win-border: #3a3838;
+      --folder-yellow: #d0ccc6;
+      --accent-pink: #888;
+      --font-mono: 'Share Tech Mono', monospace;
+      --font-display: 'VT323', monospace;
+      --font-body: 'Courier Prime', monospace;
+    }
+
+    /* ===================== RED MOON THEME ===================== */
+    body.red-mode {
+      --cream: #0e0a0a;
+      --grid-line: #2a1a1a;
+      --accent: #cc2222;
+      --accent-dark: #991111;
+      --accent-light: #e05555;
+      --tan: #3a1010;
+      --text-dark: #f0e0e0;
+      --text-mid: #c09090;
+      --win-bar: #1a0808;
+      --win-bg: #120a0a;
+      --win-border: #cc2222;
+      --folder-yellow: #3a1a1a;
+      --accent-pink: #cc2222;
+      background-color: var(--cream);
+      background-image:
+        linear-gradient(var(--grid-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    }
+
+    /* ===================== RESET & BASE ===================== */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background-color: var(--cream);
+      background-image:
+        linear-gradient(var(--grid-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+      background-size: 32px 32px;
+      font-family: var(--font-body);
+      color: var(--text-dark);
+      min-height: 100vh;
+      overflow-x: hidden;
+      transition: background-color 0.4s ease, color 0.4s ease;
+    }
+
+    /* ===================== SIDEBAR ICONS ===================== */
+    .sidebar-left,
+    .sidebar-right {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      z-index: 100;
+    }
+    .sidebar-left { left: 24px; }
+    .sidebar-right { right: 24px; }
+
+    .sidebar-icon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.15s ease;
+    }
+    .sidebar-icon:hover { transform: scale(1.1); }
+    .sidebar-icon span {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-mid);
+    }
+
+    .icon-box {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: bold;
+    }
+    .icon-h {
+      background: var(--accent-dark);
+      color: var(--cream);
+      font-family: var(--font-display);
+      font-size: 26px;
+    }
+    .icon-folder {
+      background: var(--folder-yellow);
+      border: 2px solid #999;
+      font-size: 22px;
+    }
+
+    /* ===================== TASKBAR ===================== */
+    .taskbar {
+      background: #1a1a1a;
+      padding: 10px 24px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      border-bottom: 1px solid #333;
+    }
+
+    .taskbar-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.15s, background 0.15s;
+      text-decoration: none;
+      background: #2a2a2a;
+    }
+    .taskbar-btn:hover { transform: scale(1.12); background: #3a3a3a; }
+    .taskbar-btn svg { width: 22px; height: 22px; }
+
+    /* ===================== MAIN LAYOUT ===================== */
+    main {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 60px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 48px;
+    }
+
+    /* ===================== HERO TITLE ===================== */
+    .hero-title {
+      text-align: center;
+      font-family: var(--font-display);
+      font-size: clamp(52px, 12vw, 96px);
+      color: var(--accent);
+      letter-spacing: 6px;
+      line-height: 1;
+      text-shadow: 3px 3px 0 var(--tan);
+      user-select: none;
+    }
+
+    /* ===================== WINDOW COMPONENT ===================== */
+    .win {
+      border: 2px solid var(--win-border);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 6px 6px 0 var(--accent-dark);
+      background: var(--win-bg);
+      animation: fadeUp 0.5s ease both;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .win-bar {
+      background: var(--win-bar);
+      color: var(--cream);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .win-close {
+      width: 16px; height: 16px;
+      background: var(--accent-pink);
+      border-radius: 3px;
+      cursor: default;
+    }
+
+    .win-body { padding: 28px 24px; }
+
+    /* ===================== SECTION: HOME ===================== */
+    #home .win-body {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .profile-pic {
+      flex-shrink: 0;
+      width: 110px; height: 110px;
+      border-radius: 50%;
+      border: 3px solid var(--accent);
+      background: var(--cream);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .profile-pic-placeholder {
+      width: 100%; height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--grid-line);
+      color: var(--text-mid);
+      font-size: 11px;
+      font-family: var(--font-mono);
+      text-align: center;
+    }
+
+    .home-text h1 {
+      font-family: var(--font-display);
+      font-size: 30px;
+      color: var(--accent-dark);
+      line-height: 1.1;
+    }
+    .home-text .title-tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--accent-light);
+      margin: 4px 0 10px;
+    }
+    .home-text p {
+      font-size: 13.5px;
+      line-height: 1.65;
+      color: var(--text-mid);
+    }
+    .home-text .quote {
+      font-style: italic;
+      font-size: 12px;
+      color: var(--accent);
+      margin-top: 10px;
+    }
+
+    /* ===================== SECTION: ABOUT ===================== */
+    .about-grid { display: grid; gap: 16px; }
+
+    .about-block h3 {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 6px;
+    }
+    .about-block p {
+      font-size: 13.5px;
+      line-height: 1.65;
+      color: var(--text-mid);
+    }
+
+    .strengths-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .strength-tag {
+      background: var(--accent);
+      color: var(--cream);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 4px 12px;
+      border-radius: 4px;
+    }
+
+    /* ===================== SECTION: MUSIC & MOVIES ===================== */
+    .media-section h3 {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .media-card {
+      border: 2px solid var(--win-border);
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      background: var(--cream);
+    }
+    .media-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 3px 3px 0 var(--accent-dark);
+    }
+
+    .media-card-img {
+      width: 100%;
+      aspect-ratio: 1;
+      background: var(--grid-line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+    .media-card-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .media-card-fallback {
+      display: none;
+      width: 100%;
+      height: 100%;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 32px;
+      color: var(--olive-dark);
+      background: var(--grid-line);
+    }
+    .media-card-img svg { width: 36px; height: 36px; }
+    .media-card-label {
+      padding: 5px 4px;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      text-align: center;
+      color: var(--text-mid);
+      line-height: 1.3;
+    }
+
+    /* ===================== SECTION: SKILLS ===================== */
+    .skills-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .skill-group h3 {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+
+    .skill-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .skill-icon { font-size: 18px; width: 28px; height: 28px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .skill-icon svg { width: 22px; height: 22px; }
+    .skill-name {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--text-dark);
+    }
+
+
+    /* ===================== SECTION: CONTACT ===================== */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 12px;
+    }
+
+    .contact-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border: 2px solid var(--win-border);
+      border-radius: 8px;
+      text-decoration: none;
+      color: var(--text-dark);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      background: var(--cream);
+      transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
+      cursor: pointer;
+    }
+    .contact-btn:hover {
+      background: var(--accent);
+      color: var(--cream);
+      transform: translateY(-2px);
+      box-shadow: 3px 3px 0 var(--accent-dark);
+    }
+    .contact-btn .icon { width: 24px; height: 24px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .contact-btn .icon svg { width: 22px; height: 22px; }
+
+    /* ===================== SECTION LABEL ===================== */
+    .section-label {
+      font-family: var(--font-display);
+      font-size: 38px;
+      color: var(--accent-dark);
+      letter-spacing: 3px;
+      margin-bottom: 16px;
+    }
+
+    /* ===================== RESPONSIVE ===================== */
+    @media (max-width: 600px) {
+      .sidebar-left, .sidebar-right { display: none; }
+      #home .win-body { flex-direction: column; text-align: center; }
+      .skills-cols { grid-template-columns: 1fr; }
+      .media-grid { grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ===================== SIDEBAR LEFT ===================== -->
+  <nav class="sidebar-left">
+    <a class="sidebar-icon" href="#home">
+      <div class="icon-box icon-h">K</div>
+      <span>profile</span>
+    </a>
+    <a class="sidebar-icon" href="#media">
+      <div class="icon-box icon-folder">📁</div>
+      <span>works</span>
+    </a>
+  </nav>
+
+  <!-- ===================== SIDEBAR RIGHT ===================== -->
+  <nav class="sidebar-right">
+    <a class="sidebar-icon" href="#contact">
+      <div class="icon-box icon-folder">📁</div>
+      <span>contact</span>
+    </a>
+    <a class="sidebar-icon" href="#skills">
+      <div class="icon-box icon-folder">📁</div>
+      <span>resume</span>
+    </a>
+  </nav>
+
+  <!-- ===================== TASKBAR ===================== -->
+  <div class="taskbar">
+    <!-- Moon toggle decoration -->
+    <button class="taskbar-btn" id="moon-btn" title="Toggle red mode">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#cccccc" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- ===================== MAIN CONTENT ===================== -->
+  <main>
+
+    <!-- HERO TITLE -->
+    <div class="hero-title">PORTFOLIO</div>
+
+    <!-- ===== SECTION: HOME ===== -->
+    <section id="home">
+      <div class="win" style="animation-delay:0.1s">
+        <div class="win-bar">
+          <span>C:\FRANCIS\portfolio</span>
+          <div class="win-close"></div>
+        </div>
+        <div class="win-body">
+          <div class="profile-pic">
+            <div class="profile-pic-placeholder">[ photo ]</div>
+          </div>
+          <div class="home-text">
+            <p style="font-family:var(--font-mono);font-size:12px;color:var(--olive-light)">hi! i'm</p>
+            <h1>Francis Kyle<br>San Pascual</h1>
+            <p class="title-tag">BSIT | ASPIRING DEVELOPER</p>
+            <p>I am an aspiring developer passionate about technology and continuous learning. My goal is to live life with a clear mind, make the most of my time, and explore new experiences — because life is short and full of opportunities.</p>
+            <p class="quote">"Build things that matter."</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION: ABOUT ===== -->
+    <section id="about">
+      <div class="section-label">C:\ABOUT</div>
+      <div class="win" style="animation-delay:0.2s">
+        <div class="win-bar">
+          <span>C:\FRANCIS\about_me</span>
+          <div class="win-close"></div>
+        </div>
+        <div class="win-body">
+          <div class="about-grid">
+            <div class="about-block">
+              <h3>Background</h3>
+              <p>I am currently a BSIT student, continuously learning and expanding my knowledge across various programming languages and technologies.</p>
+            </div>
+            <div class="about-block">
+              <h3>Interest in Technology</h3>
+              <p>I am deeply interested in computer technology because it allows me to create, express creativity, and build solutions to problems I once didn't know how to solve.</p>
+            </div>
+            <div class="about-block">
+              <h3>Strengths</h3>
+              <div class="strengths-list">
+                <span class="strength-tag">Problem-solving</span>
+                <span class="strength-tag">Leadership</span>
+                <span class="strength-tag">Patience</span>
+                <span class="strength-tag">Practical decisions</span>
+              </div>
+            </div>
+            <div class="about-block">
+              <h3>Career Goal</h3>
+              <p>My goal is to become a software engineer who develops applications people can use in their everyday lives, especially in today's fast-evolving digital era.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION: MUSIC & MOVIES ===== -->
+    <section id="media">
+      <div class="section-label">C:\FAVORITES</div>
+      <div class="win" style="animation-delay:0.3s">
+        <div class="win-bar">
+          <span>C:\FRANCIS\favorites</span>
+          <div class="win-close"></div>
+        </div>
+        <div class="win-body">
+
+          <div class="media-section">
+            <h3>Music Artists</h3>
+            <div class="media-grid" id="music-grid"></div>
+          </div>
+
+          <div class="media-section">
+            <h3>Movies &amp; Series</h3>
+            <div class="media-grid" id="movies-grid"></div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION: SKILLS ===== -->
+    <section id="skills">
+      <div class="section-label">C:\SKILLS</div>
+      <div class="win" style="animation-delay:0.4s">
+        <div class="win-bar">
+          <span>C:\FRANCIS\skills</span>
+          <div class="win-close"></div>
+        </div>
+        <div class="win-body">
+          <div class="skills-cols">
+
+            <div class="skill-group">
+              <h3>Programming Languages</h3>
+              <div id="lang-skills"></div>
+            </div>
+
+            <div class="skill-group">
+              <h3>Tools</h3>
+              <div id="tool-skills"></div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION: CONTACT ===== -->
+    <section id="contact">
+      <div class="section-label">C:\CONTACT</div>
+      <div class="win" style="animation-delay:0.5s">
+        <div class="win-bar">
+          <span>C:\FRANCIS\contact</span>
+          <div class="win-close"></div>
+        </div>
+        <div class="win-body">
+          <div class="contact-grid" id="contact-grid"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // ===================== JAVASCRIPT =====================
+
+    // --- SVG ICON LIBRARY ---
+
+    const svg = {
+      mic: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8"/></svg>`,
+      guitar: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 3 L3 9 L9 15 C10 17 13 18 15 16 L16 15 C18 13 17 10 15 9 L14 8 L15 7 L17 5 L19 3"/><circle cx="11" cy="13" r="1.5"/></svg>`,
+      wave: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12 Q5 6 8 12 Q11 18 14 12 Q17 6 20 12 Q22 16 24 12"/></svg>`,
+      music: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>`,
+      vinyl: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg>`,
+      speaker: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>`,
+      headphones: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>`,
+      sun: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`,
+      tv: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="15" rx="2"/><polyline points="17 2 12 7 7 2"/></svg>`,
+      flask: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 3h6l1 9H8L9 3zM8 12l-4 8h16l-4-8"/></svg>`,
+      eye: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`,
+      palm: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v10M8 5l4-3 4 3M6 20c0-4 6-8 6-8s6 4 6 8"/><line x1="12" y1="12" x2="12" y2="22"/></svg>`,
+      briefcase: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="12"/></svg>`,
+      pill: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7z"/><line x1="8.5" y1="8.5" x2="15.5" y2="15.5"/></svg>`,
+      monitor: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>`,
+      terminal: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>`,
+      phone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18" stroke-width="2.5" stroke-linecap="round"/></svg>`,
+      // Brand SVGs for skills
+      python: `<svg viewBox="0 0 24 24"><path fill="#3776AB" d="M11.914 0C5.82 0 6.2 2.656 6.2 2.656l.007 2.752h5.814v.826H3.9S0 5.789 0 11.969c0 6.18 3.403 5.959 3.403 5.959h2.03v-2.867s-.109-3.402 3.35-3.402h5.769s3.24.052 3.24-3.131V3.298S18.28 0 11.914 0zm-3.2 1.902a1.047 1.047 0 1 1 0 2.094 1.047 1.047 0 0 1 0-2.094z"/><path fill="#FDD835" d="M12.086 24c6.096 0 5.716-2.656 5.716-2.656l-.007-2.752h-5.814v-.826h8.12S24 18.211 24 12.031c0-6.18-3.403-5.959-3.403-5.959h-2.03v2.867s.109 3.402-3.35 3.402H9.448s-3.24-.052-3.24 3.131V20.7S5.72 24 12.086 24zm3.2-1.902a1.047 1.047 0 1 1 0-2.094 1.047 1.047 0 0 1 0 2.094z"/></svg>`,
+      c_lang: `<svg viewBox="0 0 24 24"><path fill="#5C6BC0" d="M16.5 9.5A6.5 6.5 0 1 0 12 19.5v-2.1A4.4 4.4 0 1 1 16.4 12h2.1a6.46 6.46 0 0 0-2-2.5z"/><text x="9" y="16" font-size="8" font-family="monospace" font-weight="bold" fill="#5C6BC0">C</text></svg>`,
+      cpp: `<svg viewBox="0 0 24 24"><path fill="#00599C" d="M10.5 15.5A3.5 3.5 0 1 1 10.5 8.5v2A1.5 1.5 0 1 0 10.5 13.5v2zM16 10h-1V9h-1v1h-1v1h1v1h1v-1h1zM20 10h-1V9h-1v1h-1v1h1v1h1v-1h1z"/><circle fill="none" stroke="#00599C" stroke-width="1.5" cx="12" cy="12" r="10"/></svg>`,
+      html: `<svg viewBox="0 0 24 24"><path fill="#E34F26" d="M1.5 0h21l-1.91 21.563L11.977 24l-8.565-2.438L1.5 0zm7.031 9.75l-.232-2.718 10.059.003.23-2.622L5.412 4.41l.698 8.01h9.126l-.326 3.426-2.91.804-2.955-.81-.188-2.11H6.248l.33 4.171L12 19.351l5.379-1.443.744-8.157H8.531z"/></svg>`,
+      css: `<svg viewBox="0 0 24 24"><path fill="#1572B6" d="M1.5 0h21l-1.91 21.563L11.977 24l-8.564-2.438L1.5 0zm17.09 4.413L5.41 4.41l.213 2.622 10.125.002-.255 2.716h-6.64l.24 2.573h6.182l-.366 3.523-2.91.804-2.956-.81-.188-2.11h-2.61l.29 3.855L12 19.288l5.373-1.53L18.59 4.413z"/></svg>`,
+      js: `<svg viewBox="0 0 24 24"><rect width="24" height="24" rx="2" fill="#F7DF1E"/><path d="M6.5 17.5l1.5-1c.3.5.6.9 1.2.9.5 0 .8-.2.8-.9V11h2v6.5c0 1.9-1.1 2.8-2.7 2.8-1.4 0-2.3-.8-2.8-1.8zM14 17.3l1.5-.9c.4.6.9 1.1 1.8 1.1.8 0 1.2-.4 1.2-.9 0-.6-.5-.8-1.4-1.2l-.5-.2c-1.4-.6-2.3-1.3-2.3-2.9 0-1.4 1.1-2.5 2.8-2.5 1.2 0 2.1.4 2.7 1.5l-1.5 1c-.3-.6-.7-.8-1.2-.8s-.8.3-.8.7c0 .5.3.7 1.1 1l.5.2c1.6.7 2.5 1.4 2.5 3 0 1.7-1.3 2.6-3.1 2.6-1.7 0-2.8-.8-3.3-1.7z"/></svg>`,
+      git: `<svg viewBox="0 0 24 24"><path fill="#F05032" d="M23.546 10.93L13.067.452a1.55 1.55 0 0 0-2.188 0L8.708 2.627l2.76 2.76a1.838 1.838 0 0 1 2.327 2.341l2.658 2.66a1.838 1.838 0 0 1 1.9 3.039 1.837 1.837 0 0 1-2.597-2.59L13.15 8.64v6.099a1.838 1.838 0 0 1 .483 3.597 1.838 1.838 0 0 1-2.295-1.793 1.84 1.84 0 0 1 1.054-1.648V8.578a1.835 1.835 0 0 1-.997-2.412L8.698 3.407.45 11.647a1.55 1.55 0 0 0 0 2.187l10.48 10.478a1.55 1.55 0 0 0 2.187 0l10.43-10.43a1.55 1.55 0 0 0 0-2.187"/></svg>`,
+      vscode: `<svg viewBox="0 0 24 24"><path fill="#007ACC" d="M23.15 2.587L18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L3.899 12 .326 15.26a1 1 0 0 0 .001 1.479L1.65 17.94a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.492 1.492 0 0 0 1.704.29l4.942-2.377A1.5 1.5 0 0 0 24 19.06V4.94a1.5 1.5 0 0 0-.85-1.353zm-5.146 14.861L10.826 12l7.178-5.448v10.896z"/></svg>`,
+      gdb: `<svg viewBox="0 0 24 24" fill="none" stroke="#e07040" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><polyline points="9 15 12 12 15 15"/><line x1="12" y1="12" x2="12" y2="17"/></svg>`,
+      // Contacts
+      facebook: `<svg viewBox="0 0 24 24"><path fill="#1877F2" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>`,
+      instagram: `<svg viewBox="0 0 24 24"><defs><radialGradient id="ig" cx="30%" cy="107%" r="150%"><stop offset="0%" stop-color="#fdf497"/><stop offset="10%" stop-color="#fdf497"/><stop offset="50%" stop-color="#fd5949"/><stop offset="68%" stop-color="#d6249f"/><stop offset="100%" stop-color="#285AEB"/></radialGradient></defs><path fill="url(#ig)" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>`,
+      github: `<svg viewBox="0 0 24 24"><path fill="#1a1a2e" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>`,
+      email: `<svg viewBox="0 0 24 24" fill="none" stroke="#e87090" stroke-width="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>`,
+    };
+
+    // --- DATA ---
+
+    const musicArtists = [
+      { name: "A$AP Rocky",     img: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/A%24AP_Rocky_at_2019_Governors_Ball.jpg/220px-A%24AP_Rocky_at_2019_Governors_Ball.jpg" },
+      { name: "Deftones",       img: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Deftones_-_Rock_am_Ring_2016-7044.jpg/220px-Deftones_-_Rock_am_Ring_2016-7044.jpg" },
+      { name: "Slowdive",       img: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Slowdive_2017.jpg/220px-Slowdive_2017.jpg" },
+      { name: "Greyhoundz",     img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Greyhoundz_band.jpg/220px-Greyhoundz_band.jpg" },
+      { name: "Cocteau Twins",  img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Cocteau_Twins.jpg/220px-Cocteau_Twins.jpg" },
+      { name: "Linkin Park",    img: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Linkin_park_concert.jpg/220px-Linkin_park_concert.jpg" },
+      { name: "The Beatles",    img: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/The_Fabs.JPG/220px-The_Fabs.JPG" },
+      { name: "The Beach Boys", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/TheBeachBoys65.JPG/220px-TheBeachBoys65.JPG" },
+    ];
+
+    const movies = [
+      { name: "Twin Peaks",           img: "https://upload.wikimedia.org/wikipedia/en/thumb/9/9d/Twin_Peaks_Season_3_Poster.jpg/220px-Twin_Peaks_Season_3_Poster.jpg" },
+      { name: "Breaking Bad",         img: "https://upload.wikimedia.org/wikipedia/en/thumb/6/61/Breaking_Bad_title_card.png/220px-Breaking_Bad_title_card.png" },
+      { name: "Se7en",                img: "https://upload.wikimedia.org/wikipedia/en/thumb/6/68/Seven_%28movie%29_poster.jpg/220px-Seven_%28movie%29_poster.jpg" },
+      { name: "Scarface",             img: "https://upload.wikimedia.org/wikipedia/en/thumb/e/ec/Scarface_-_1983_film.jpg/220px-Scarface_-_1983_film.jpg" },
+      { name: "Pulp Fiction",         img: "https://upload.wikimedia.org/wikipedia/en/thumb/3/3b/Pulp_Fiction_%281994%29_poster.jpg/220px-Pulp_Fiction_%281994%29_poster.jpg" },
+      { name: "Requiem for a Dream",  img: "https://upload.wikimedia.org/wikipedia/en/thumb/e/e4/Requiem_for_a_dream.jpg/220px-Requiem_for_a_dream.jpg" },
+      { name: "The Social Network",   img: "https://upload.wikimedia.org/wikipedia/en/thumb/c/c9/The_Social_Network_film_poster.jpg/220px-The_Social_Network_film_poster.jpg" },
+      { name: "Mr. Robot",            img: "https://upload.wikimedia.org/wikipedia/en/thumb/4/40/Mr._Robot_Logo.jpg/220px-Mr._Robot_Logo.jpg" },
+      { name: "Black Mirror",         img: "https://upload.wikimedia.org/wikipedia/en/thumb/c/c8/Black_Mirror_Season_1_Poster.jpg/220px-Black_Mirror_Season_1_Poster.jpg" },
+    ];
+
+    const languages = [
+      { name: "Python",     icon: svg.python, level: 75 },
+      { name: "C",          icon: svg.c_lang, level: 60 },
+      { name: "C++",        icon: svg.cpp,    level: 55 },
+      { name: "HTML",       icon: svg.html,   level: 85 },
+      { name: "CSS",        icon: svg.css,    level: 80 },
+      { name: "JavaScript", icon: svg.js,     level: 70 },
+    ];
+
+    const tools = [
+      { name: "Git",     icon: svg.git,    level: 70 },
+      { name: "VS Code", icon: svg.vscode, level: 90 },
+      { name: "GDB",     icon: svg.gdb,    level: 50 },
+    ];
+
+    const contacts = [
+      { label: "Facebook",  icon: svg.facebook,  href: "https://facebook.com" },
+      { label: "Instagram", icon: svg.instagram, href: "https://instagram.com" },
+      { label: "GitHub",    icon: svg.github,    href: "https://github.com" },
+      { label: "Email",     icon: svg.email,     href: "mailto:example@email.com" },
+    ];
+
+    // --- RENDER MEDIA CARDS ---
+
+    function buildMediaCard(item) {
+      const card = document.createElement("div");
+      card.className = "media-card";
+      card.innerHTML = `
+        <div class="media-card-img">
+          <img src="${item.img}" alt="${item.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+          <div class="media-card-fallback">${item.name.charAt(0)}</div>
+        </div>
+        <div class="media-card-label">${item.name}</div>
+      `;
+      card.addEventListener("click", () => {
+        const query = encodeURIComponent(item.name);
+        window.open("https://www.google.com/search?q=" + query, "_blank");
+      });
+      return card;
+    }
+
+    const musicGrid  = document.getElementById("music-grid");
+    const moviesGrid = document.getElementById("movies-grid");
+
+    musicArtists.forEach(a => musicGrid.appendChild(buildMediaCard(a)));
+    movies.forEach(m => moviesGrid.appendChild(buildMediaCard(m)));
+
+    // --- RENDER SKILL BARS ---
+
+    function buildSkillItem(skill) {
+      const div = document.createElement("div");
+      div.className = "skill-item";
+      div.innerHTML = `
+        <span class="skill-icon">${skill.icon}</span>
+        <span class="skill-name">${skill.name}</span>
+      `;
+      return div;
+    }
+
+    const langContainer = document.getElementById("lang-skills");
+    const toolContainer = document.getElementById("tool-skills");
+
+    languages.forEach(l => langContainer.appendChild(buildSkillItem(l)));
+    tools.forEach(t => toolContainer.appendChild(buildSkillItem(t)));
+
+    // --- RENDER CONTACT BUTTONS ---
+
+    const contactGrid = document.getElementById("contact-grid");
+
+    contacts.forEach(c => {
+      const a = document.createElement("a");
+      a.className = "contact-btn";
+      a.href = c.href;
+      a.target = "_blank";
+      a.innerHTML = `<span class="icon">${c.icon}</span>${c.label}`;
+      contactGrid.appendChild(a);
+    });
+
+    // --- SMOOTH SCROLL FOR SIDEBAR LINKS ---
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+      link.addEventListener("click", e => {
+        e.preventDefault();
+        const target = document.querySelector(link.getAttribute("href"));
+        if (target) target.scrollIntoView({ behavior: "smooth" });
+      });
+    });
+
+    // --- MOON THEME TOGGLE ---
+    const moonBtn = document.getElementById("moon-btn");
+    moonBtn.addEventListener("click", () => {
+      document.body.classList.toggle("red-mode");
+      const isRed = document.body.classList.contains("red-mode");
+      moonBtn.querySelector("svg path").setAttribute("fill", isRed ? "#cc2222" : "none");
+    });
+  </script>
+
+</body>
+</html>
